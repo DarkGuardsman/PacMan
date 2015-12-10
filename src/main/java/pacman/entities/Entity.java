@@ -2,6 +2,8 @@ package pacman.entities;
 
 import pacman.Game;
 
+import java.util.List;
+
 /**
  * Prefab class for any game board object used
  * by the game.
@@ -46,9 +48,40 @@ public abstract class Entity
 
     }
 
-    public boolean tryToMoveTo(int newX, int newY)
+    /**
+     * Called to move the entity to the next
+     * location.
+     *
+     * @param newX - next x location
+     * @param newY - next y location
+     * @return true if the entity was moved.
+     */
+    public boolean moveTo(int newX, int newY)
     {
+        if (canMoveTo(newX, newY))
+        {
+            List<Entity> entities = game.getEntitiesAt(newX, newY);
+            for (Entity entity : entities)
+            {
+                onCollide(entity);
+            }
+            this.x = newX;
+            this.y = newY;
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * Tests if the entity can move to the next location
+     *
+     * @param newX - next x location
+     * @param newY - next y location
+     * @return true if the entity can move
+     */
+    public boolean canMoveTo(int newX, int newY)
+    {
+        return game.getBoard().containsWall(newX, newY);
     }
 
     /**
@@ -80,5 +113,25 @@ public abstract class Entity
     public void setDead()
     {
         this.isAlive = false;
+    }
+
+    /**
+     * X location
+     *
+     * @return x
+     */
+    public int x()
+    {
+        return x;
+    }
+
+    /**
+     * Y location
+     *
+     * @return y
+     */
+    public int y()
+    {
+        return y;
     }
 }

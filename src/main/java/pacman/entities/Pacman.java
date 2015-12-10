@@ -12,9 +12,9 @@ public class Pacman extends Entity
     /** Number of dots eaten */
     protected int dotsEaten = 0;
     /** Direction pacman is facing */
-    protected Direction facing = Direction.RIGHT;
+    public Direction facing = Direction.RIGHT;
     /** Is the entity moving */
-    protected boolean isMoving = false;
+    public boolean isMoving = false;
 
     public Pacman(Game game)
     {
@@ -25,9 +25,12 @@ public class Pacman extends Entity
     public void tick()
     {
         super.tick();
-        if(isMoving)
+        if (isMoving)
         {
-
+            if (!moveTo(x + facing.x, y + facing.y))
+            {
+                //TODO do wall hit animation
+            }
         }
     }
 

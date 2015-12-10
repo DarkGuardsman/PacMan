@@ -3,6 +3,7 @@ package pacman;
 import pacman.board.GameBoard;
 import pacman.entities.Entity;
 import pacman.entities.Pacman;
+import pacman.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -86,38 +87,42 @@ public class Game
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_W)
                     {
-
+                        player.facing = Direction.UP;
+                        player.isMoving = true;
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_S)
                     {
-
+                        player.facing = Direction.DOWN;
+                        player.isMoving = true;
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_A)
                     {
-
+                        player.facing = Direction.LEFT;
+                        player.isMoving = true;
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_D)
                     {
-
+                        player.facing = Direction.RIGHT;
+                        player.isMoving = true;
                     }
                 }
                 else if (ke.getID() == KeyEvent.KEY_RELEASED)
                 {
                     if (ke.getKeyCode() == KeyEvent.VK_W)
                     {
-
+                        player.isMoving = false;
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_S)
                     {
-
+                        player.isMoving = false;
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_A)
                     {
-
+                        player.isMoving = false;
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_D)
                     {
-
+                        player.isMoving = false;
                     }
                 }
                 return false;
@@ -135,5 +140,35 @@ public class Game
     {
         //TODO have exit key
         return false;
+    }
+
+    /**
+     * Gets the game board
+     *
+     * @return GameBoard
+     */
+    public GameBoard getBoard()
+    {
+        return board;
+    }
+
+    /**
+     * Gets all entities currently at a location
+     *
+     * @param x - x location
+     * @param y - y location
+     * @return list, or empty list if nothing is found
+     */
+    public List<Entity> getEntitiesAt(int x, int y)
+    {
+        List<Entity> list = new ArrayList();
+        for (Entity entity : entities)
+        {
+            if (entity.x() == x && entity.y() == y)
+            {
+                list.add(entity);
+            }
+        }
+        return list;
     }
 }
