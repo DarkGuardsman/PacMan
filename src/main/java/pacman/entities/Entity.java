@@ -1,5 +1,7 @@
 package pacman.entities;
 
+import pacman.Game;
+
 /**
  * Prefab class for any game board object used
  * by the game.
@@ -15,6 +17,15 @@ public abstract class Entity
     protected int x = 0;
     /** Y grid coordinate */
     protected int y = 0;
+
+    /** Game the entity is part of */
+    protected final Game game;
+
+    public Entity(Game game)
+    {
+        this.game = game;
+    }
+
 
     /**
      * Called to update the entity each tick.
@@ -33,6 +44,11 @@ public abstract class Entity
     public void onCollide(Entity entity)
     {
 
+    }
+
+    public boolean tryToMoveTo(int newX, int newY)
+    {
+        return false;
     }
 
     /**
