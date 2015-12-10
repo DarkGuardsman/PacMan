@@ -6,4 +6,12 @@ package pacman.entities;
  */
 public class Monster extends Entity
 {
+    @Override
+    public void onCollide(Entity entity)
+    {
+        if (entity instanceof Pacman)
+        {
+            entity.setDead();
+        }
+    }
 }
