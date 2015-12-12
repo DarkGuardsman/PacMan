@@ -19,7 +19,7 @@ public class Dot extends Entity
     public void draw(Graphics g, int x, int y, float scale)
     {
         g.setColor(Color.white);
-        int size = (int) (10 * scale);
+        int size = (int) (5 * scale);
         int boxScale = (int) (scale * 20) / 2;
         g.fillRect(x + boxScale - (size / 2), y + boxScale - (size / 2), size, size);
     }

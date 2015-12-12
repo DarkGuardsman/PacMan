@@ -73,12 +73,12 @@ public class Game
                 while (it.hasNext())
                 {
                     Entity ent = it.next();
-                    if (!ent.isAlive())
+                    if (!ent.isAlive() && ent != player)
                     {
                         it.remove();
                         if (updateList.contains(ent))
                         {
-                            it.remove();
+                            updateList.remove(ent);
                         }
                     }
                 }
@@ -121,7 +121,7 @@ public class Game
      */
     protected void loadControls()
     {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher()
+        KeyEventDispatcher dis = new KeyEventDispatcher()
         {
             @Override
             public boolean dispatchKeyEvent(KeyEvent ke)
@@ -132,41 +132,65 @@ public class Game
                     {
                         isPaused = !isPaused;
                     }
-                    else if (ke.getKeyCode() == KeyEvent.VK_W)
+                    else if (!isPaused && player.isAlive())
                     {
-                        player.facing = Direction.UP;
-                        player.isMoving = true;
-                        System.out.println("Up");
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_S)
-                    {
-                        player.facing = Direction.DOWN;
-                        player.isMoving = true;
-                        System.out.println("Down");
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_A)
-                    {
-                        player.facing = Direction.LEFT;
-                        player.isMoving = true;
-                        System.out.println("Left");
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_D)
-                    {
-                        player.facing = Direction.RIGHT;
-                        player.isMoving = true;
-                        System.out.println("Right");
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE)
-                    {
-                        if (!exit)
+                        if (ke.getKeyCode() == KeyEvent.VK_W)
                         {
-                            exitToMenu();
+                            if (player.getFacing() != Direction.UP)
+                            {
+                                player.setFacing(Direction.UP);
+                            }
+                            else
+                            {
+                                player.setIsMoving(true);
+                            }
+                        }
+                        else if (ke.getKeyCode() == KeyEvent.VK_S)
+                        {
+                            if (player.getFacing() != Direction.DOWN)
+                            {
+                                player.setFacing(Direction.DOWN);
+                            }
+                            else
+                            {
+                                player.setIsMoving(true);
+                            }
+                        }
+                        else if (ke.getKeyCode() == KeyEvent.VK_A)
+                        {
+                            if (player.getFacing() != Direction.LEFT)
+                            {
+                                player.setFacing(Direction.LEFT);
+                            }
+                            else
+                            {
+                                player.setIsMoving(true);
+                            }
+                        }
+                        else if (ke.getKeyCode() == KeyEvent.VK_D)
+                        {
+                            if (player.getFacing() != Direction.RIGHT)
+                            {
+                                player.setFacing(Direction.RIGHT);
+                            }
+                            else
+                            {
+                                player.setIsMoving(true);
+                            }
+                        }
+                        else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE)
+                        {
+                            if (!exit)
+                            {
+                                exitToMenu();
+                            }
                         }
                     }
                 }
                 return false;
             }
-        });
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dis);
     }
 
     /**
@@ -175,6 +199,7 @@ public class Game
      *
      * @return true if should exit
      */
+
     protected boolean shouldExit()
     {
         return exit;

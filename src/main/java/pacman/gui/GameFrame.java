@@ -90,12 +90,17 @@ public class GameFrame extends JFrame
                 //Render entities
                 for (Entity entity : game.entities)
                 {
-                    entity.draw(g, startCornerX + size * entity.x(), startCornerY + size * entity.y(), size / 20);
+                    if (entity != game.player)
+                    {
+                        entity.draw(g, startCornerX + size * entity.x(), startCornerY + size * entity.y(), size / 20);
+                    }
                 }
+                //Player needs to draw over everything
+                game.player.draw(g, startCornerX + size * game.player.x(), startCornerY + size * game.player.y(), size / 20);
             }
             view.getBufferStrategy().show();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
