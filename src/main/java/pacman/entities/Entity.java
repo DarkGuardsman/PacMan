@@ -2,6 +2,7 @@ package pacman.entities;
 
 import pacman.Game;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -85,6 +86,15 @@ public abstract class Entity
     }
 
     /**
+     * Draws the entity
+     *
+     * @param g - graphics instance
+     * @param startCornerX
+     * @param startCornerY
+     */
+    public abstract void draw(Graphics g, int startCornerX, int startCornerY, float scale);
+
+    /**
      * Called when the entity is added to the board.
      * When added if, true, it will be added to the
      * world tick list. If false it will just be
@@ -133,5 +143,11 @@ public abstract class Entity
     public int y()
     {
         return y;
+    }
+
+    public void setPos(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
     }
 }

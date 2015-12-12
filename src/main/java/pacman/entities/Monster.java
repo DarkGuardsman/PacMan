@@ -2,6 +2,7 @@ package pacman.entities;
 
 import pacman.Game;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -40,5 +41,12 @@ public class Monster extends Entity
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void draw(Graphics g, int startCornerX, int startCornerY, float scale)
+    {
+        g.setColor(Color.blue);
+        g.fillRect(startCornerX + x + (int) (15 * scale), startCornerY + y + (int) (15 * scale), (int) (15 * scale), (int) (15 * scale));
     }
 }

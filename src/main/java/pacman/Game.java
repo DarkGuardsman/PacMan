@@ -21,9 +21,16 @@ import java.util.List;
 public class Game
 {
     /** Current player */
-    protected Pacman player;
+    public Pacman player;
     /** List of all game peaces */
-    protected List<Entity> entities = new ArrayList();
+    public List<Entity> entities = new ArrayList();
+    /** GUI of the game */
+    public GameFrame frame;
+    /** Spawn location */
+    public int spawnX = 0;
+    /** Spawn location */
+    public int spawnY = 0;
+
     /** List update entities */
     protected List<Entity> updateList = new ArrayList();
 
@@ -32,18 +39,21 @@ public class Game
 
     /** Current loaded game board */
     protected GameBoard board;
+    /** Name of the map */
+    protected String mapName;
+
+    public Game(String map)
+    {
+        player = new Pacman(this);
+        mapName = map;
+    }
 
     /**
      * Starts the game loop
      */
     public void run()
     {
-        //Test data
-        player = new Pacman(this);
-        board = new GameBoard(20, 20);
-        board.generateEdges();
-
-
+        board = GameBoard.load(this, mapName);
         //Loop
         while (!shouldExit())
         {
@@ -84,9 +94,12 @@ public class Game
      */
     public void openGUI()
     {
-        GameFrame frame = new GameFrame(this);
-        frame.setSize(800, 600);
-        frame.setVisible(true);
+        if (frame != null)
+        {
+            frame = new GameFrame(this);
+            frame.setSize(800, 600);
+            frame.setVisible(true);
+        }
     }
 
     public void exitToMenu()
@@ -195,5 +208,34 @@ public class Game
             }
         }
         return list;
+    }
+
+    /**
+     * Adds entity to the game
+     *
+     * @param entity - entity to add
+     */
+    public void addEntity(Entity entity)
+    {
+        if (!entities.contains(entity))
+        {
+            entities.add(entity);
+            if (entity.needsTick())
+            {
+                updateList.add(entity);
+            }
+        }
+    }
+
+    /**
+     * Sets the player's spawn point
+     *
+     * @param x - location x
+     * @param y - location y
+     */
+    public void setSpawn(int x, int y)
+    {
+        this.spawnX = x;
+        this.spawnY = y;
     }
 }
