@@ -8,8 +8,7 @@ import pacman.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -36,6 +35,7 @@ public class Game
 
     /** Toggles if the game is paused */
     protected boolean isPaused = false;
+    protected boolean exit = false;
 
     /** Current loaded game board */
     protected GameBoard board;
@@ -54,33 +54,40 @@ public class Game
     public void run()
     {
         board = GameBoard.load(this, mapName);
+        player.setPos(spawnX, spawnY);
+        addEntity(player);
+        openGUI();
         //Loop
         while (!shouldExit())
         {
-            //Update entities
-            for (Entity entity : updateList)
+            if (!isPaused)
             {
-                entity.tick();
-            }
-
-            //Remove dead objects
-            Iterator<Entity> it = entities.iterator();
-            while (it.hasNext())
-            {
-                Entity ent = it.next();
-                if (!ent.isAlive())
+                //Update entities
+                for (Entity entity : updateList)
                 {
-                    it.remove();
-                    if (updateList.contains(ent))
+                    entity.tick();
+                }
+
+                //Remove dead objects
+                Iterator<Entity> it = entities.iterator();
+                while (it.hasNext())
+                {
+                    Entity ent = it.next();
+                    if (!ent.isAlive())
                     {
                         it.remove();
+                        if (updateList.contains(ent))
+                        {
+                            it.remove();
+                        }
                     }
                 }
             }
-            //Wait 50ms so we have 20 game ticks a second
+            frame.tick();
+            //Wait 17ms so we have 60 game ticks a second
             try
             {
-                Thread.sleep(50);
+                Thread.sleep(17);
             }
             catch (InterruptedException e)
             {
@@ -94,17 +101,19 @@ public class Game
      */
     public void openGUI()
     {
-        if (frame != null)
+        if (frame == null)
         {
             frame = new GameFrame(this);
+            frame.setTitle("Kata Pacman by Robert Seifert");
             frame.setSize(800, 600);
-            frame.setVisible(true);
+            frame.launch();
+            loadControls();
         }
     }
 
     public void exitToMenu()
     {
-        System.exit(0);
+        this.exit = true;
     }
 
     /**
@@ -127,40 +136,32 @@ public class Game
                     {
                         player.facing = Direction.UP;
                         player.isMoving = true;
+                        System.out.println("Up");
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_S)
                     {
                         player.facing = Direction.DOWN;
                         player.isMoving = true;
+                        System.out.println("Down");
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_A)
                     {
                         player.facing = Direction.LEFT;
                         player.isMoving = true;
+                        System.out.println("Left");
                     }
                     else if (ke.getKeyCode() == KeyEvent.VK_D)
                     {
                         player.facing = Direction.RIGHT;
                         player.isMoving = true;
+                        System.out.println("Right");
                     }
-                }
-                else if (ke.getID() == KeyEvent.KEY_RELEASED)
-                {
-                    if (ke.getKeyCode() == KeyEvent.VK_W)
+                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE)
                     {
-                        player.isMoving = false;
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_S)
-                    {
-                        player.isMoving = false;
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_A)
-                    {
-                        player.isMoving = false;
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_D)
-                    {
-                        player.isMoving = false;
+                        if (!exit)
+                        {
+                            exitToMenu();
+                        }
                     }
                 }
                 return false;
@@ -176,8 +177,7 @@ public class Game
      */
     protected boolean shouldExit()
     {
-        //TODO have exit key
-        return false;
+        return exit;
     }
 
     /**

@@ -121,14 +121,16 @@ public class GameBoard
                     int sizeY = Integer.parseInt(split[1]);
                     board = new GameBoard(sizeX, sizeY);
 
+                    line = input.readLine();
 
                     int y = 0;
-                    int x = 0;
                     while (line != null)
                     {
                         //Parse line
-                        for (char c : line.toCharArray())
+                        char[] chars = line.toCharArray();
+                        for (int x = 0; x < chars.length; x++)
                         {
+                            char c = chars[x];
                             if (c == '0')
                             {
                                 board.grid[x][y] = 0;
@@ -156,7 +158,6 @@ public class GameBoard
                                 board.grid[x][y] = 0;
                                 game.setSpawn(x, y);
                             }
-                            x++;
                         }
                         y++;
 

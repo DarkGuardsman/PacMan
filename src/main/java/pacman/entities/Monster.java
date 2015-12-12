@@ -44,9 +44,11 @@ public class Monster extends Entity
     }
 
     @Override
-    public void draw(Graphics g, int startCornerX, int startCornerY, float scale)
+    public void draw(Graphics g, int x, int y, float scale)
     {
         g.setColor(Color.blue);
-        g.fillRect(startCornerX + x + (int) (15 * scale), startCornerY + y + (int) (15 * scale), (int) (15 * scale), (int) (15 * scale));
+        int size = (int) (14 * scale);
+        int boxScale = (int) (scale * 20) / 2;
+        g.fillRect(x + boxScale - (size / 2), y + boxScale - (size / 2), size, size);
     }
 }

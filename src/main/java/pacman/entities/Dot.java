@@ -16,10 +16,12 @@ public class Dot extends Entity
     }
 
     @Override
-    public void draw(Graphics g, int startCornerX, int startCornerY, float scale)
+    public void draw(Graphics g, int x, int y, float scale)
     {
         g.setColor(Color.white);
-        g.fillRect(startCornerX + x + (int) (10 * scale), startCornerY + y + (int) (10 * scale), (int) (10 * scale), (int) (10 * scale));
+        int size = (int) (10 * scale);
+        int boxScale = (int) (scale * 20) / 2;
+        g.fillRect(x + boxScale - (size / 2), y + boxScale - (size / 2), size, size);
     }
 
     @Override

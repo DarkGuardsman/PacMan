@@ -6,8 +6,6 @@ import pacman.entities.Entity;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -26,9 +24,16 @@ public class GameFrame extends JFrame
     /** Starting point for draw code. */
     int startCornerX = 50;
 
+    Canvas view;
+
     public GameFrame(final Game game)
     {
         this.game = game;
+
+        view = new Canvas();
+        view.setSize(getSize().width, getSize().height);
+        view.setPreferredSize(getSize());
+        add(view);
         //Catch to prevent player from exiting the game right away
         addWindowListener(new WindowAdapter()
                           {
@@ -39,61 +44,60 @@ public class GameFrame extends JFrame
                               }
                           }
         );
-        //Used to check for resize of window
-        addComponentListener(new ComponentListener()
-        {
-            public void componentResized(ComponentEvent e)
-            {
-
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e)
-            {
-
-            }
-
-            @Override
-            public void componentShown(ComponentEvent e)
-            {
-
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent e)
-            {
-
-            }
-        });
     }
 
-    @Override
-    public void paint(Graphics g)
+    public void launch()
     {
-        GameBoard board = game.getBoard();
-        if (board != null)
-        {
-            int size = getSize().width > getSize().height ? (int) (getSize().height * 0.85) : (int) (getSize().width * 0.85);
-            size = size / (board.sizeX > board.sizeY ? board.sizeX : board.sizeY);
+        setVisible(true);
+        view.createBufferStrategy(2);
+    }
 
-            g.setColor(Color.black);
-            g.fillRect(1, 1, getSize().width - 1, getSize().height - 1);
-            for (int x = 0; x < board.sizeX; x++)
+    public void tick()
+    {
+        try
+        {
+            Graphics g = view.getBufferStrategy().getDrawGraphics();
+            GameBoard board = game.getBoard();
+            if (board != null)
             {
-                for (int y = 0; y < board.sizeY; y++)
+                //Scale box sizes by window
+                int size = getSize().width > getSize().height ? (int) (getSize().height * 0.85) : (int) (getSize().width * 0.85);
+                size = size / (board.sizeX > board.sizeY ? board.sizeX : board.sizeY);
+
+                //Make size even so rendering is easier
+                if (size % 2 != 0)
                 {
-                    if (board.containsWall(x, y))
+                    size -= 1;
+                }
+
+                //Render background
+                g.setColor(Color.black);
+                g.fillRect(1, 1, getSize().width - 1, getSize().height - 1);
+
+                //Render tiles
+                for (int x = 0; x < board.sizeX; x++)
+                {
+                    for (int y = 0; y < board.sizeY; y++)
                     {
-                        drawBoxFilled(g, x, y, size);
+                        if (board.containsWall(x, y))
+                        {
+                            drawBoxFilled(g, x, y, size);
+                        }
+                        drawBox(g, x, y, size);
                     }
-                    drawBox(g, x, y, size);
+                }
+
+                //Render entities
+                for (Entity entity : game.entities)
+                {
+                    entity.draw(g, startCornerX + size * entity.x(), startCornerY + size * entity.y(), size / 20);
                 }
             }
-
-            for (Entity entity : game.entities)
-            {
-                entity.draw(g, startCornerX, startCornerY, size / 20);
-            }
+            view.getBufferStrategy().show();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

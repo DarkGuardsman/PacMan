@@ -82,7 +82,7 @@ public abstract class Entity
      */
     public boolean canMoveTo(int newX, int newY)
     {
-        return game.getBoard().containsWall(newX, newY);
+        return !game.getBoard().containsWall(newX, newY);
     }
 
     /**

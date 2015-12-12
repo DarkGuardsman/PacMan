@@ -14,9 +14,8 @@ public class Main
     {
         //Create game
         //TODO later open Menu
-        Game game = new Game();
+        Game game = new Game("testMap1");
         game.isPaused = true;
-        game.openGUI();
         game.run();
     }
 }

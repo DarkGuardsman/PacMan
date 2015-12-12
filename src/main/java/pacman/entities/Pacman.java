@@ -31,9 +31,11 @@ public class Pacman extends Entity
         super.tick();
         if (isMoving)
         {
+            isMoving = false;
+            System.out.println("moving");
             if (!moveTo(x + facing.x, y + facing.y))
             {
-                //TODO do wall hit animation
+                System.out.println("wall");
             }
         }
     }
@@ -61,9 +63,11 @@ public class Pacman extends Entity
     }
 
     @Override
-    public void draw(Graphics g, int startCornerX, int startCornerY, float scale)
+    public void draw(Graphics g, int x, int y, float scale)
     {
         g.setColor(Color.yellow);
-        g.fillRect(startCornerX + x + (int) (15 * scale), startCornerY + y + (int) (15 * scale), (int) (15 * scale), (int) (15 * scale));
+        int size = (int) (16 * scale);
+        int boxScale = (int) (scale * 20) / 2;
+        g.fillRect(x + boxScale - (size / 2), y + boxScale - (size / 2), size, size);
     }
 }
