@@ -97,6 +97,26 @@ public class GameFrame extends JFrame
                 }
                 //Player needs to draw over everything
                 game.player.draw(g, startCornerX + size * game.player.x(), startCornerY + size * game.player.y(), size / 20);
+
+                //Draw in game GUI
+                g.setColor(Color.YELLOW);
+                g.drawString("Score: " + game.player.getDotsEaten() * 25, 25, 25);
+                g.drawString("Lives: " + game.player.getLives(), 25, 35);
+                if (game.isPaused)
+                {
+                    g.drawString("PAUSED", startCornerX + size * (board.sizeX / 2), 20);
+                    g.drawString("~press [PAUSE] to continue", startCornerX + size * (board.sizeX / 2), 35);
+                }
+                if (game.player.getLives() <= 0)
+                {
+                    g.setColor(Color.RED);
+                    g.drawString("GAME OVER", startCornerX + size * (board.sizeX / 2), startCornerY + size * (board.sizeY / 2));
+                }
+            }
+            else
+            {
+                g.setColor(Color.YELLOW);
+                g.drawString("NO MAP", getSize().width / 2 - 3, getSize().height / 2);
             }
             view.getBufferStrategy().show();
         }

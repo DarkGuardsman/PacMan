@@ -34,7 +34,7 @@ public class Game
     protected List<Entity> updateList = new ArrayList();
 
     /** Toggles if the game is paused */
-    protected boolean isPaused = false;
+    public boolean isPaused = false;
     protected boolean exit = false;
 
     /** Current loaded game board */

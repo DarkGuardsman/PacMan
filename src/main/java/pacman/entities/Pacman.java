@@ -58,10 +58,7 @@ public class Pacman extends Entity
     public void setDead()
     {
         super.setDead();
-        if (lives-- <= 0)
-        {
-            game.exitToMenu();
-        }
+        lives -= 1;
     }
 
     @Override
@@ -96,11 +93,11 @@ public class Pacman extends Entity
         {
             g.fillArc(cx, cy, size, size, angle, arc);
         }
-        else
+        else if (deathTicks < 120)
         {
             g.fillArc(cx, cy, size, size, angle - (int) (arc * ((float) deathTicks / 120f)), arc - (int) (arc * ((float) deathTicks / 120f)));
             deathTicks++;
-            if (deathTicks >= 120)
+            if (deathTicks >= 120 && lives > 0)
             {
                 this.setPos(game.spawnX, game.spawnY);
                 this.isAlive = true;
