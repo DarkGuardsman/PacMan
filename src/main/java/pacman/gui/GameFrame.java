@@ -46,12 +46,18 @@ public class GameFrame extends JFrame
         );
     }
 
+    /**
+     * Called to open the GUI
+     */
     public void launch()
     {
         setVisible(true);
         view.createBufferStrategy(2);
     }
 
+    /**
+     * Called each tick to update the screen render
+     */
     public void tick()
     {
         try
@@ -88,12 +94,13 @@ public class GameFrame extends JFrame
                 }
 
                 //Render entities
-                for (Entity entity : game.entities)
+                for (Entity entity : game.dots)
                 {
-                    if (entity != game.player)
-                    {
-                        entity.draw(g, startCornerX + size * entity.x(), startCornerY + size * entity.y(), size / 20);
-                    }
+                    entity.draw(g, startCornerX + size * entity.x(), startCornerY + size * entity.y(), size / 20);
+                }
+                for (Entity entity : game.monsters)
+                {
+                    entity.draw(g, startCornerX + size * entity.x(), startCornerY + size * entity.y(), size / 20);
                 }
                 //Player needs to draw over everything
                 game.player.draw(g, startCornerX + size * game.player.x(), startCornerY + size * game.player.y(), size / 20);
@@ -112,6 +119,11 @@ public class GameFrame extends JFrame
                 {
                     g.setColor(Color.RED);
                     g.drawString("GAME OVER", startCornerX + size * (board.sizeX / 2), startCornerY + size * (board.sizeY / 2));
+                }
+                else if(game.win)
+                {
+                    g.setColor(Color.GREEN);
+                    g.drawString("WINNER", startCornerX + size * (board.sizeX / 2), startCornerY + size * (board.sizeY / 2));
                 }
             }
             else

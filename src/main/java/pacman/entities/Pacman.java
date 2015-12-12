@@ -58,7 +58,10 @@ public class Pacman extends Entity
     public void setDead()
     {
         super.setDead();
-        lives -= 1;
+        if (lives > 0)
+        {
+            lives -= 1;
+        }
     }
 
     @Override

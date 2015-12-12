@@ -90,6 +90,12 @@ public class GameBoard
      */
     public boolean containsWall(int x, int y)
     {
+        //Prevents output of bounds exceptions by saying everything
+        //outside the map is a wall
+        if (x <= 0 || y <= 0 || x >= sizeX || y >= sizeY)
+        {
+            return true;
+        }
         return this.grid[x][y] == 1;
     }
 

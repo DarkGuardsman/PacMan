@@ -1,7 +1,9 @@
 package pacman;
 
 import pacman.board.GameBoard;
+import pacman.entities.Dot;
 import pacman.entities.Entity;
+import pacman.entities.Monster;
 import pacman.entities.Pacman;
 import pacman.gui.GameFrame;
 import pacman.util.Direction;
@@ -21,14 +23,19 @@ public class Game
 {
     /** Current player */
     public Pacman player;
-    /** List of all game peaces */
-    public List<Entity> entities = new ArrayList();
+    /** List of all monsters */
+    public List<Entity> monsters = new ArrayList();
+    /** List of all dots */
+    public List<Entity> dots = new ArrayList();
     /** GUI of the game */
     public GameFrame frame;
     /** Spawn location */
     public int spawnX = 0;
     /** Spawn location */
     public int spawnY = 0;
+    /** Has the player won */
+    public boolean win = false;
+    public int winTicks = 0;
 
     /** List update entities */
     protected List<Entity> updateList = new ArrayList();
@@ -48,14 +55,27 @@ public class Game
         mapName = map;
     }
 
+    public void load()
+    {
+        //Cleanup if new map is loaded over old
+        monsters.clear();
+        dots.clear();
+        win = false;
+        winTicks = 0;
+        isPaused = true;
+
+        //Load new map
+        board = GameBoard.load(this, mapName);
+        player.setPos(spawnX, spawnY);
+        addEntity(player);
+    }
+
     /**
      * Starts the game loop
      */
     public void run()
     {
-        board = GameBoard.load(this, mapName);
-        player.setPos(spawnX, spawnY);
-        addEntity(player);
+        load();
         openGUI();
         //Loop
         while (!shouldExit())
@@ -69,17 +89,50 @@ public class Game
                 }
 
                 //Remove dead objects
-                Iterator<Entity> it = entities.iterator();
+                Iterator<Entity> it = dots.iterator();
                 while (it.hasNext())
                 {
                     Entity ent = it.next();
-                    if (!ent.isAlive() && ent != player)
+                    if (!ent.isAlive())
+                    {
+                        it.remove();
+                    }
+                }
+                it = monsters.iterator();
+                while (it.hasNext())
+                {
+                    Entity ent = it.next();
+                    if (!ent.isAlive())
                     {
                         it.remove();
                         if (updateList.contains(ent))
                         {
                             updateList.remove(ent);
                         }
+                    }
+                }
+                if (!win)
+                {
+                    if (dots.size() == 0)
+                    {
+                        win = true;
+                        player.setLives(Math.min(3, player.getLives() + 1));
+                        for (Entity entity : monsters)
+                        {
+                            entity.setDead();
+                        }
+                        if (mapName == "testMap1")
+                        {
+                            mapName = "testMap2";
+                        }
+                    }
+                }
+                else
+                {
+                    winTicks++;
+                    if (winTicks >= 500)
+                    {
+                        load();
                     }
                 }
             }
@@ -113,7 +166,7 @@ public class Game
 
     public void exitToMenu()
     {
-        this.exit = true;
+        System.exit(0);
     }
 
     /**
@@ -123,7 +176,6 @@ public class Game
     {
         KeyEventDispatcher dis = new KeyEventDispatcher()
         {
-            @Override
             public boolean dispatchKeyEvent(KeyEvent ke)
             {
                 if (ke.getID() == KeyEvent.KEY_PRESSED)
@@ -225,12 +277,23 @@ public class Game
     public List<Entity> getEntitiesAt(int x, int y)
     {
         List<Entity> list = new ArrayList();
-        for (Entity entity : entities)
+        for (Entity entity : monsters)
         {
             if (entity.x() == x && entity.y() == y)
             {
                 list.add(entity);
             }
+        }
+        for (Entity entity : dots)
+        {
+            if (entity.x() == x && entity.y() == y)
+            {
+                list.add(entity);
+            }
+        }
+        if (player.x() == x && player.y() == y)
+        {
+            list.add(player);
         }
         return list;
     }
@@ -242,13 +305,23 @@ public class Game
      */
     public void addEntity(Entity entity)
     {
-        if (!entities.contains(entity))
+        if (entity instanceof Dot && !dots.contains(entity))
         {
-            entities.add(entity);
+            dots.add(entity);
             if (entity.needsTick())
             {
                 updateList.add(entity);
             }
+        }
+        else if (entity instanceof Monster && !monsters.contains(entity))
+        {
+            monsters.add(entity);
+        }
+
+        //Added entities to update list
+        if (entity.needsTick() && !updateList.contains(entity))
+        {
+            updateList.add(entity);
         }
     }
 

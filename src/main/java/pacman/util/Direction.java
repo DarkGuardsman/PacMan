@@ -17,6 +17,8 @@ public enum Direction
     public final int x;
     public final int y;
 
+    public static final Direction[] VALID = new Direction[]{UP, DOWN, LEFT, RIGHT};
+
     Direction(int x, int y)
     {
         this.x = x;
