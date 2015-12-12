@@ -8,8 +8,8 @@ package pacman.board;
  */
 public class GameBoard
 {
-    protected final int sizeX;
-    protected final int sizeY;
+    public final int sizeX;
+    public final int sizeY;
 
     protected final byte[][] grid; //Note for very large maps a different storage system may be needed
 

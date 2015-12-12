@@ -12,7 +12,11 @@ public class Main
      */
     public static void main(String... args)
     {
+        //Create game
+        //TODO later open Menu
         Game game = new Game();
+        game.isPaused = true;
+        game.openGUI();
         game.run();
     }
 }

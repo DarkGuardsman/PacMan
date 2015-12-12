@@ -3,6 +3,7 @@ package pacman;
 import pacman.board.GameBoard;
 import pacman.entities.Entity;
 import pacman.entities.Pacman;
+import pacman.gui.GameFrame;
 import pacman.util.Direction;
 
 import java.awt.*;
@@ -66,7 +67,31 @@ public class Game
                     }
                 }
             }
+            //Wait 50ms so we have 20 game ticks a second
+            try
+            {
+                Thread.sleep(50);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
+    }
+
+    /**
+     * Opens the game GUI that the player sees
+     */
+    public void openGUI()
+    {
+        GameFrame frame = new GameFrame(this);
+        frame.setSize(800, 600);
+        frame.setVisible(true);
+    }
+
+    public void exitToMenu()
+    {
+        System.exit(0);
     }
 
     /**
