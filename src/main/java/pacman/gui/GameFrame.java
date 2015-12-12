@@ -106,6 +106,7 @@ public class GameFrame extends JFrame
                 {
                     g.drawString("PAUSED", startCornerX + size * (board.sizeX / 2), 20);
                     g.drawString("~press [PAUSE] to continue", startCornerX + size * (board.sizeX / 2), 35);
+                    g.drawString("~press W,A,S,D to move", startCornerX, startCornerY + size * board.sizeY);
                 }
                 if (game.player.getLives() <= 0)
                 {
