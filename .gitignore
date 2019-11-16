@@ -1,1 +1,11 @@
 *.iml
+
+out/
+
+.idea/
+
+build-log.txt
+
+build/
+
+.gradle/
