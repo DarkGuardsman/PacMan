@@ -2,7 +2,8 @@ package pacman.entities;
 
 import pacman.Game;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  * @author Robert Seifert
@@ -15,6 +16,9 @@ public class Dot extends Entity
         super(game);
     }
 
+    /**
+     * Draws a 20 pixel white dot
+     */
     @Override
     public void draw(Graphics g, int x, int y, float scale)
     {

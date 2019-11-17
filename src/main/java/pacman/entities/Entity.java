@@ -1,9 +1,10 @@
 package pacman.entities;
 
 import pacman.Game;
+import pacman.board.GameBoard;
 
-import java.awt.*;
-import java.util.List;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  * Prefab class for any game board object used
@@ -12,7 +13,7 @@ import java.util.List;
  * @author Robert Seifert
  * @version 12-10.2015
  */
-public abstract class Entity
+public class Entity
 {
     /** Is the entity alive */
     protected boolean isAlive = true;
@@ -61,16 +62,19 @@ public abstract class Entity
     {
         if (canMoveTo(newX, newY))
         {
-            List<Entity> entities = game.getEntitiesAt(newX, newY);
-            for (Entity entity : entities)
-            {
-                onCollide(entity);
-            }
-            this.x = newX;
-            this.y = newY;
+            //Collide with entities
+            handleEntityCollision(newX, newY);
+
+            //Update position
+            setPos(newX, newY);
             return true;
         }
         return false;
+    }
+
+    public void handleEntityCollision(int newX, int newY)
+    {
+        game.loopEntitiesAt(newX, newY, e -> onCollide(e));
     }
 
     /**
@@ -82,17 +86,27 @@ public abstract class Entity
      */
     public boolean canMoveTo(int newX, int newY)
     {
-        return !game.getBoard().containsWall(newX, newY);
+        return !getBoard().containsWall(newX, newY);
     }
 
     /**
      * Draws the entity
      *
-     * @param g - graphics instance
+     * @param g            - graphics instance
      * @param startCornerX
      * @param startCornerY
      */
-    public abstract void draw(Graphics g, int startCornerX, int startCornerY, float scale);
+    public void draw(Graphics g, int startCornerX, int startCornerY, float scale)
+    {
+
+        final int size = (int) Math.floor(5 * scale);
+        final int center = (size / 2);
+        final int boxScale = (int) Math.floor(scale * 20) / 2;
+
+        //Render
+        g.setColor(Color.red);
+        g.fillRect(x + boxScale - center, y + boxScale - center, size, size);
+    }
 
     /**
      * Called when the entity is added to the board.
@@ -125,6 +139,19 @@ public abstract class Entity
         this.isAlive = false;
     }
 
+
+    /** Gets the game this entity is inside */
+    public Game getGame()
+    {
+        return game;
+    }
+
+    /** Gets the game board this entity is inside */
+    public GameBoard getBoard()
+    {
+        return getGame().getBoard();
+    }
+
     /**
      * X location
      *
@@ -145,9 +172,10 @@ public abstract class Entity
         return y;
     }
 
-    public void setPos(int x, int y)
+    public Entity setPos(int x, int y)
     {
         this.x = x;
         this.y = y;
+        return this;
     }
 }

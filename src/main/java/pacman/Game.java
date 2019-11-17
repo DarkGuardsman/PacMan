@@ -8,10 +8,13 @@ import pacman.entities.Pacman;
 import pacman.gui.GameFrame;
 import pacman.util.Direction;
 
-import java.awt.*;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Running game instance, only one of these should exist at a time.
@@ -268,34 +271,25 @@ public class Game
     }
 
     /**
-     * Gets all entities currently at a location
+     * Passes all entities into the collector function
      *
      * @param x - x location
      * @param y - y location
-     * @return list, or empty list if nothing is found
      */
-    public List<Entity> getEntitiesAt(int x, int y)
+    public void loopEntitiesAt(int x, int y, Consumer<Entity> collector)
     {
-        List<Entity> list = new ArrayList();
-        for (Entity entity : monsters)
-        {
-            if (entity.x() == x && entity.y() == y)
-            {
-                list.add(entity);
-            }
-        }
-        for (Entity entity : dots)
-        {
-            if (entity.x() == x && entity.y() == y)
-            {
-                list.add(entity);
-            }
-        }
+        monsters.stream()
+                .filter(m -> m.x() == x && m.y() == y)
+                .forEach(collector);
+
+        dots.stream()
+                .filter(d -> d.x() == x && d.y() == y)
+                .forEach(collector);
+
         if (player.x() == x && player.y() == y)
         {
-            list.add(player);
+           collector.accept(player);
         }
-        return list;
     }
 
     /**
